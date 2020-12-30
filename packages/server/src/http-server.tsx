@@ -15,7 +15,7 @@ export function createHttpServer(): express.Express {
   app.use(compression());
   app.use(express.static(appBundleDirectory));
   app.get("/server", ssrHandler);
-  
+
   return app;
 }
 
