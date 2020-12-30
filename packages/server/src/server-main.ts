@@ -1,6 +1,9 @@
 import { createHttpServer } from "./http-server";
+import dotenv from "dotenv";
 
-const PORT = 3000;
+dotenv.config({});
+
+const PORT = process.env.PORT || 3000;
 
 const app = createHttpServer();
 
@@ -11,3 +14,5 @@ app.listen(PORT, () => {
   console.log(`  http://localhost:${PORT}/server - ssr with hydration`);
   /* eslint-enable no-console */
 });
+
+export default app;

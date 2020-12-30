@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
-describe("test", () => {
-  it("works", () => {
+describe("components", () => {
+  it("work", () => {
     expect(true).to.equal(true);
   });
 });

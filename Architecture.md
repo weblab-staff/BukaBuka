@@ -99,11 +99,11 @@ New `devDependencies` can be added to the root `package.json` using yarn:
 yarn add <package name> --dev -W
 ```
 
-Some packages depend on sibling packages within the monorepo. For example, in this repo, `@sample/app` depends on `@sample/components`. This relationship is just a normal dependency, and can be described in the `package.json` of `app` like so:
+Some packages depend on sibling packages within the monorepo. For example, in this repo, `@bukabuka/app` depends on `@bukabuka/components`. This relationship is just a normal dependency, and can be described in the `package.json` of `app` like so:
 
 ```json
   "dependencies": {
-    "@sample/components": "<package version>"
+    "@bukabuka/components": "<package version>"
   }
 ```
 

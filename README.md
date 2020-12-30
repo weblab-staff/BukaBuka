@@ -1,4 +1,5 @@
 # Buka buka
+
 [![Build Status](https://github.com/weblab-staff/Bukabuka/workflows/tests/badge.svg)](https://github.com/weblab-staff/Bukabuka/actions)
 
 This is Buka buka: 🐢. Buka buka loves questions from weblab students. No questions make buka buka sad. You don't want to make Bukabuka sad.
@@ -17,4 +18,4 @@ You can reference [Architecture.md](Architecture.md) for further instructions, b
 4. (In another terminal) `yarn run start:client`
 
 **Note**
-We are not using npm, we are using yarn. So whenever adding a package / dependency, use yarn add <package>. 
+We are not using npm, we are using yarn. So whenever adding a package / dependency, use yarn add <package>.

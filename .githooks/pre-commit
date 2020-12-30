@@ -1,2 +1,3 @@
 #!/bin/sh
+yarn run prettify
 yarn run pretest
