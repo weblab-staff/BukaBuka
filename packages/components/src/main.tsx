@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError } from 'axios';
 interface HappinessResponse {
   happiness: number;
 }
@@ -11,7 +11,7 @@ export const Main: React.FunctionComponent = () => {
 
   const getHappiness = async () => {
     const happiness = await axios
-      .get<HappinessResponse>("/api/happiness")
+      .get<HappinessResponse>('/api/happiness')
       .then((res) => res.data)
       .then((happinessResp) => happinessResp.happiness);
     setHappiness(happiness);
