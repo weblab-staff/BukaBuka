@@ -19,9 +19,9 @@ export function createHttpServer(): express.Express {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use("/api", ApiRouter);
-  app.get('/heartbeat', (_, res) => {
-    res.status(200).send({msg: "hello world"});
-  })
+  app.get("/heartbeat", (_, res) => {
+    res.status(200).send({ msg: "hello world" });
+  });
   app.get("/server", ssrHandler);
   app.use(express.static(appBundleDirectory));
   return app;
@@ -41,7 +41,7 @@ function ssrHandler(_req: express.Request, res: express.Response) {
 </head>
 <body>
     <div id="SITE_MAIN" data-ssr>
-        ${ReactDOMServer.renderToString(<App/>)}
+        ${ReactDOMServer.renderToString(<App />)}
     </div>
     <script type="text/javascript" src="main.js"></script>
 </body>

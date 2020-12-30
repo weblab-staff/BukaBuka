@@ -43,10 +43,10 @@ module.exports = {
       chunkFilename: "[name].css",
     }),
   ],
-  devServer: { 
-    host: "localhost", 
+  devServer: {
+    host: "localhost",
     proxy: {
       "/api": "http://localhost:3000",
-    }
+    },
   }, // workaround webpack-dev-server#2943
 };

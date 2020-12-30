@@ -27,7 +27,7 @@ describe("Server", () => {
       const res = await testServer.get("/api/happiness");
       expect(res.status).to.equal(200);
       expect(res.body.happiness).to.not.be.undefined;
-      expect(res.body.happiness).to.be.a('number');
+      expect(res.body.happiness).to.be.a("number");
     });
   });
 });

@@ -9,9 +9,9 @@ const container =
   document.getElementById(rootContainerId) ?? createContainer(document.body);
 
 if (container.hasAttribute("data-ssr")) {
-  ReactDOM.hydrate(<App/>, container);
+  ReactDOM.hydrate(<App />, container);
 } else {
-  ReactDOM.render(<App/>, container);
+  ReactDOM.render(<App />, container);
 }
 
 function createContainer(targetParent: Element) {
