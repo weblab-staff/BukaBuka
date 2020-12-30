@@ -1,28 +1,26 @@
-import path from "path";
-import express from "express";
-import compression from "compression";
-import logger from "morgan";
-import bodyParser from "body-parser";
-import ReactDOMServer from "react-dom/server";
-import { App } from "@bukabuka/app";
-import ApiRouter from "./routers/ApiRouter";
+import path from 'path';
+import express from 'express';
+import compression from 'compression';
+import logger from 'morgan';
+import bodyParser from 'body-parser';
+import ReactDOMServer from 'react-dom/server';
+import { App } from '@bukabuka/app';
+import ApiRouter from './routers/ApiRouter';
 
-const appRootDirectory = path.dirname(
-  require.resolve("@bukabuka/app/package.json")
-);
-const appBundleDirectory = path.join(appRootDirectory, "dist/umd");
+const appRootDirectory = path.dirname(require.resolve('@bukabuka/app/package.json'));
+const appBundleDirectory = path.join(appRootDirectory, 'dist/umd');
 
 export function createHttpServer(): express.Express {
   const app = express();
-  app.use(logger("dev"));
+  app.use(logger('dev'));
   app.use(compression());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use("/api", ApiRouter);
-  app.get("/heartbeat", (_, res) => {
-    res.status(200).send({ msg: "hello world" });
+  app.use('/api', ApiRouter);
+  app.get('/heartbeat', (_, res) => {
+    res.status(200).send({ msg: 'hello world' });
   });
-  app.get("/server", ssrHandler);
+  app.get('/server', ssrHandler);
   app.use(express.static(appBundleDirectory));
   return app;
 }

@@ -4,12 +4,7 @@
     "es2020": true,
     "node": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "prettier",
-    "prettier/react"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier", "prettier/react"],
   "plugins": ["react-hooks", "no-only-tests"],
   "settings": {
     "react": {

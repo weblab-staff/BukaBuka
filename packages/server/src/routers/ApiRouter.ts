@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 class ApiRouter {
   private _router = Router();
@@ -6,7 +6,7 @@ class ApiRouter {
   constructor() {
     this._configure();
     // eslint-disable-next-line no-console
-    console.log("Loaded!");
+    console.log('Loaded!');
   }
 
   get router() {
@@ -14,7 +14,7 @@ class ApiRouter {
   }
 
   private _configure() {
-    this.router.get("/happiness", (_, res) => {
+    this.router.get('/happiness', (_, res) => {
       res.status(200).json({ happiness: 1 });
     });
   }

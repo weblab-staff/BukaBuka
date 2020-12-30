@@ -1,5 +1,5 @@
-import { createHttpServer } from "./http-server";
-import dotenv from "dotenv";
+import { createHttpServer } from './http-server';
+import dotenv from 'dotenv';
 
 dotenv.config({});
 

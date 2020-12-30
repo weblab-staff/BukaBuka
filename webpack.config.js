@@ -1,22 +1,22 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 /** @type import('webpack').Configuration */
 module.exports = {
-  devtool: "source-map",
+  devtool: 'source-map',
   context: __dirname,
   module: {
     rules: [
       {
         test: /\.js$/,
-        enforce: "pre",
-        loader: "source-map-loader",
+        enforce: 'pre',
+        loader: 'source-map-loader',
       },
       {
         test: /\.tsx?$/,
-        loader: "ts-loader",
+        loader: 'ts-loader',
         options: {
           projectReferences: true,
-          configFile: require.resolve("./tsconfig.json"),
+          configFile: require.resolve('./tsconfig.json'),
           compilerOptions: {
             // build still catches these. avoid them during bunding time for a nicer dev experience.
             noUnusedLocals: false,
@@ -26,27 +26,27 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/,
-        loader: "file-loader",
+        loader: 'file-loader',
       },
     ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".json"],
+    extensions: ['.ts', '.tsx', '.js', '.json'],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[name].css",
+      filename: '[name].css',
+      chunkFilename: '[name].css',
     }),
   ],
   devServer: {
-    host: "localhost",
+    host: 'localhost',
     proxy: {
-      "/api": "http://localhost:3000",
+      '/api': 'http://localhost:3000',
     },
   }, // workaround webpack-dev-server#2943
 };
