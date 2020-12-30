@@ -16,10 +16,12 @@
     "prettify": "npx prettier . --write"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/chai": "^4.2.14",
     "@types/compression": "^1.7.0",
     "@types/express": "^4.17.9",
     "@types/mocha": "^8.2.0",
+    "@types/morgan": "^1.9.2",
     "@types/node": "12",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",

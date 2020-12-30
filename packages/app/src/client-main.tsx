@@ -9,9 +9,9 @@ const container =
   document.getElementById(rootContainerId) ?? createContainer(document.body);
 
 if (container.hasAttribute("data-ssr")) {
-  ReactDOM.hydrate(<App text="Hi! I'm Bukabuka. (hydrated)" />, container);
+  ReactDOM.hydrate(<App/>, container);
 } else {
-  ReactDOM.render(<App text="Hi! I'm Bukabuka. (client-only)" />, container);
+  ReactDOM.render(<App/>, container);
 }
 
 function createContainer(targetParent: Element) {

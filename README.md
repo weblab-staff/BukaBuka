@@ -14,8 +14,11 @@ You can reference [Architecture.md](Architecture.md) for further instructions, b
 
 1. Install [yarn](https://classic.yarnpkg.com/en/)
 2. `yarn install`
+3. `yarn run build`
 3. `yarn run start:server`
 4. (In another terminal) `yarn run start:client`
+
+By default, the server uses port 3000 and the client uses port 8080. The client proxies request from '/api' to the server.
 
 **Note**
 We are not using npm, we are using yarn. So whenever adding a package / dependency, use yarn add <package>.

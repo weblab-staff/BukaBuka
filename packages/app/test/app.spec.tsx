@@ -4,10 +4,10 @@ import { App } from "@bukabuka/app";
 
 describe("<App />", () => {
   it("renders without throwing on the server", () => {
-    expect(() => renderToString(<App text="" />)).to.not.throw();
+    expect(() => renderToString(<App/>)).to.not.throw();
   });
 
   it("renders provided text", () => {
-    expect(renderToString(<App text="It works" />)).to.contain("It works");
+    expect(renderToString(<App/>)).to.contain("Bukabuka");
   });
 });
