@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 interface HappinessResponse {
   happiness: number;
 }
@@ -18,13 +18,13 @@ export const Main: React.FunctionComponent = () => {
     setLoaded(true);
   };
   useEffect(() => {
-    getHappiness().catch(() => {
-      alert("There is no happiness");
+    getHappiness().catch((err: AxiosError) => {
+      throw new Error(`There is no happiness: ${err}`);
     });
   }, []);
 
   if (!loaded) {
-    return <div>Bukabuka cannot be reached.</div>;
+    return <div>Bukabuka cannot be reached. There is no happiness.</div>;
   }
-  return <div>Bukabuka happiness level: {{ happiness }}</div>;
+  return <div>Bukabuka happiness level: {happiness}</div>;
 };
