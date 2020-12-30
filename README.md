@@ -1,4 +1,5 @@
 # Buka buka
+[![Build Status](https://github.com/weblab-staff/Bukabuka/workflows/tests/badge.svg)](https://github.com/weblab-staff/Bukabuka/actions)
 
 Buka buka loves questions from weblab students. No questions make buka buka sad. You don't want to make Bukabuka sad.
 

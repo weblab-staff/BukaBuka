@@ -1,7 +1,5 @@
 # Architecture
 
-[![Build Status](https://github.com/weblab-staff/Bukabuka/workflows/tests/badge.svg)](https://github.com/weblab-staff/Bukabuka/actions)
-
 Monorepo setup with yarn workspaces, typescript, and lerna.
 
 ## Webpack 5 (early 2021 note)
