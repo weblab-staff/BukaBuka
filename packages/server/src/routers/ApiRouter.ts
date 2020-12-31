@@ -12,7 +12,6 @@ class ApiRouter {
   }
 
   private configure() {
-
     this.router.get('/alive', (_, res) => {
       ApiController.alive()
         .then((alive) => {
@@ -35,7 +34,6 @@ class ApiRouter {
       const answers = ApiController.getAnswers();
       res.status(200).json({ answers });
     });
-
   }
 }
 

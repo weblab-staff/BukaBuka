@@ -33,6 +33,5 @@ describe('Server', () => {
       expect(res.status).to.be.equal(200);
       expect(res.body.answers).to.be.an('array');
     });
-    
   });
 });

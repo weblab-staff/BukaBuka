@@ -2,7 +2,7 @@
 import type { docs_v1 } from 'googleapis';
 import google from '../google';
 import config from '../config';
-const GOOGLE_DOC_MIMETYPE = "application/vnd.google-apps.document";
+const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
 const START_TOKEN: string = config.startToken;
 
 class ApiController {
@@ -10,7 +10,6 @@ class ApiController {
   private answers: Array<string> = [];
 
   constructor() {
-    
     // Temp values while we resolve the api.
     this.loadData();
   }
@@ -21,13 +20,14 @@ class ApiController {
       .then((doc) => this.parseDocument(doc))
       .then(() => this.validateParsing())
       .catch((err) => {
-        console.log(`ApiController(): Unable to parse google doc: ${err}`)
+        console.log(`ApiController(): Unable to parse google doc: ${err}`);
       });
   }
 
   private getLatestDoc(): Promise<string> {
-    return google.drive({version: 'v2'})
-      .files.list({spaces: 'drive', orderBy: 'createdDate', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
+    return google
+      .drive({ version: 'v2' })
+      .files.list({ spaces: 'drive', orderBy: 'createdDate', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
       .then((resp) => resp.data.items)
       .then((files) => {
         if (files === undefined || files === null || files.length === 0) {
@@ -43,9 +43,11 @@ class ApiController {
   }
 
   private getDocument(documentId: string) {
-    return google.docs({version: 'v1'}).documents.get({ documentId }).then((resp) => resp.data);
+    return google
+      .docs({ version: 'v1' })
+      .documents.get({ documentId })
+      .then((resp) => resp.data);
   }
-
 
   private parseDocument(document: docs_v1.Schema$Document) {
     let startParsing = false;
@@ -62,13 +64,13 @@ class ApiController {
         }
         if (!startParsing) return;
         state = this.parseText(text, this.isQuestion(p), state);
-      })
+      });
     });
   }
 
   private isQuestion(element: docs_v1.Schema$ParagraphElement): boolean {
-    const isBold =  element.textRun?.textStyle?.bold;
-    return (isBold !== undefined && isBold !== null) && isBold;
+    const isBold = element.textRun?.textStyle?.bold;
+    return isBold !== undefined && isBold !== null && isBold;
   }
 
   private parseText(text: string, isQuestion: boolean, isParsingQuestion: boolean) {
@@ -88,9 +90,10 @@ class ApiController {
   }
 
   private validateParsing() {
-    if (this.questions.length < this.answers.length) throw new Error('ApiController(): Somehow, buka buka has more answers than questions.')
+    if (this.questions.length < this.answers.length)
+      throw new Error('ApiController(): Somehow, buka buka has more answers than questions.');
   }
-  
+
   getHappiness(): number {
     return 1;
   }
