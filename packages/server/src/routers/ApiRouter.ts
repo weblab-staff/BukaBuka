@@ -18,11 +18,12 @@ class ApiRouter {
     });
 
     this.router.get('/alive', (_, res) => {
-      ApiController.alive().then((alive) => {
-        res.send({alive});
-      })
-      .catch(() => res.send({ alive: false}));
-    })
+      ApiController.alive()
+        .then((alive) => {
+          res.send({ alive });
+        })
+        .catch(() => res.send({ alive: false }));
+    });
   }
 }
 

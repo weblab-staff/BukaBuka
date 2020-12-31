@@ -1,7 +1,6 @@
 import google from '../google';
 
 class ApiController {
-
   getHappiness(): number {
     return 1;
   }
@@ -15,13 +14,14 @@ class ApiController {
   }
 
   alive(): Promise<boolean> {
-    const docs = google.docs({version: 'v1'});
-    return docs.documents.get({
-      documentId: '195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE',
-    }).then(() => true)
+    const docs = google.docs({ version: 'v1' });
+    return docs.documents
+      .get({
+        documentId: '195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE',
+      })
+      .then(() => true)
       .catch(() => false);
   }
-
 }
 
 export = new ApiController();

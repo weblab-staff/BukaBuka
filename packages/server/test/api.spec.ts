@@ -8,9 +8,7 @@ import { createHttpServer } from '@bukabuka/server';
 const testServer = request(createHttpServer());
 
 describe('Server', () => {
-
   describe('/api', () => {
-    
     it('is alive', async () => {
       const res = await testServer.get('/api/alive');
       expect(res.status).to.equal(200);
