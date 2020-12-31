@@ -1,12 +1,10 @@
 import { Router } from 'express';
-
+import ApiController from '../controllers/ApiController';
 class ApiRouter {
   private _router = Router();
 
   constructor() {
     this._configure();
-    // eslint-disable-next-line no-console
-    console.log('Loaded!');
   }
 
   get router() {
@@ -15,8 +13,16 @@ class ApiRouter {
 
   private _configure() {
     this.router.get('/happiness', (_, res) => {
-      res.status(200).json({ happiness: 1 });
+      const happiness = ApiController.getHappiness();
+      res.status(200).json({ happiness });
     });
+
+    this.router.get('/alive', (_, res) => {
+      ApiController.alive().then((alive) => {
+        res.send({alive});
+      })
+      .catch(() => res.send({ alive: false}));
+    })
   }
 }
 
