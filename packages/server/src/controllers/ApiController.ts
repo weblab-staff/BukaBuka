@@ -50,48 +50,56 @@ class ApiController {
   }
 
   private parseDocument(document: docs_v1.Schema$Document) {
+    // Parsing works by alternating between two states:
+    // true -> parsing question
+    // false -> parsing answer
+    // We use START_TOKEN to know when the questions start.
     let startParsing = false;
+    let state = false;
     document.body?.content?.map((element) => {
-      let state = true;
       element.paragraph?.elements?.map((p) => {
-        // Questions are bolded.
         const rawText = p.textRun?.content?.toString();
         if (rawText === undefined) return;
         const text = rawText.trim();
         if (text === '') return;
         if (text === START_TOKEN) {
           startParsing = true;
+          return; // We don't want to parse the START_TOKEN.
         }
-        if (!startParsing) return;
+        if (!startParsing) {
+          return;
+        }
         state = this.parseText(text, this.isQuestion(p), state);
       });
     });
   }
 
   private isQuestion(element: docs_v1.Schema$ParagraphElement): boolean {
+    // We assume questions questions are bolded.
     const isBold = element.textRun?.textStyle?.bold;
     return isBold !== undefined && isBold !== null && isBold;
   }
 
   private parseText(text: string, isQuestion: boolean, isParsingQuestion: boolean) {
+    let newState = isParsingQuestion;
     if (isQuestion && isParsingQuestion) {
-      this.questions[-1] += text;
+      this.questions[-1] += ` ${text}`;
     } else if (isQuestion) {
       this.questions.push(text);
-      isParsingQuestion = true;
+      newState = true;
     } else if (!isQuestion && isParsingQuestion) {
-      isParsingQuestion = false;
+      newState = false;
       this.answers.push(text);
     } else {
-      this.answers[-1] += text;
-      this.answers.push(text);
+      this.answers[-1] += ` ${text}`;
     }
-    return isParsingQuestion;
+    return newState;
   }
 
   private validateParsing() {
-    if (this.questions.length < this.answers.length)
+    if (this.questions.length < this.answers.length) {
       throw new Error('ApiController(): Somehow, buka buka has more answers than questions.');
+    }
   }
 
   getHappiness(): number {
