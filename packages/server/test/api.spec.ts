@@ -21,5 +21,18 @@ describe('Server', () => {
       expect(res.body.happiness).to.not.be.undefined;
       expect(res.body.happiness).to.be.a('number');
     });
+
+    it('provides questions', async () => {
+      const res = await testServer.get('/api/questions');
+      expect(res.status).to.be.equal(200);
+      expect(res.body.questions).to.be.an('array');
+    });
+
+    it('provides answers', async () => {
+      const res = await testServer.get('/api/answers');
+      expect(res.status).to.be.equal(200);
+      expect(res.body.answers).to.be.an('array');
+    });
+    
   });
 });

@@ -4,18 +4,14 @@ class ApiRouter {
   private _router = Router();
 
   constructor() {
-    this._configure();
+    this.configure();
   }
 
   get router() {
     return this._router;
   }
 
-  private _configure() {
-    this.router.get('/happiness', (_, res) => {
-      const happiness = ApiController.getHappiness();
-      res.status(200).json({ happiness });
-    });
+  private configure() {
 
     this.router.get('/alive', (_, res) => {
       ApiController.alive()
@@ -24,6 +20,22 @@ class ApiRouter {
         })
         .catch(() => res.send({ alive: false }));
     });
+
+    this.router.get('/happiness', (_, res) => {
+      const happiness = ApiController.getHappiness();
+      res.status(200).json({ happiness });
+    });
+
+    this._router.get('/questions', (_, res) => {
+      const questions = ApiController.getQuestions();
+      res.status(200).json({ questions });
+    });
+
+    this._router.get('/answers', (_, res) => {
+      const answers = ApiController.getAnswers();
+      res.status(200).json({ answers });
+    });
+
   }
 }
 
