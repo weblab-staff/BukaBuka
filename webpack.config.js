@@ -33,28 +33,30 @@ module.exports = {
               {
                 loader: MiniCssExtractPlugin.loader,
                 options: {
-                    publicPath: __dirname + '/dist' // path to director where assets folder is located
-                }
-            },
-              "css-loader",
-              "sass-loader"
-            ]
+                  publicPath: __dirname + '/dist', // path to director where assets folder is located
+                },
+              },
+              'css-loader',
+              'sass-loader',
+            ],
           },
           {
-            use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
-          }
-        ]
+            use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif)$/i,
-        use: [{
+        use: [
+          {
             loader: 'file-loader',
-        }]
+          },
+        ],
       },
     ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json','.scss','.css', '.png', '.jpg', '.gif'],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.scss', '.css', '.png', '.jpg', '.gif'],
   },
   plugins: [
     new MiniCssExtractPlugin({

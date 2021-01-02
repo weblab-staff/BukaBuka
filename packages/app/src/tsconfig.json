@@ -4,5 +4,5 @@
     "typeRoots": ["./node_modules/@types", "@typings"],
     "noImplicitAny": false,
     "outDir": "../dist"
-  },
+  }
 }

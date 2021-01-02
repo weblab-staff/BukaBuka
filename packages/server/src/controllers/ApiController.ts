@@ -2,7 +2,7 @@
 import type { docs_v1 } from 'googleapis';
 import google from '../google';
 import config from '../config';
-import {emitHappinessLevel} from '../socket';
+import { emitHappinessLevel } from '../socket';
 const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
 const START_TOKEN: string = config.startToken;
 
