@@ -47,6 +47,7 @@ module.exports = {
     host: 'localhost',
     proxy: {
       '/api': 'http://localhost:3000',
+      '/socket.io': 'http://localhost:3000',
     },
   }, // workaround webpack-dev-server#2943
 };
