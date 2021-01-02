@@ -9,8 +9,7 @@ module.exports = {
     main: require.resolve('./src/client-main.tsx'),
   },
   output: {
-    path: path.join(__dirname, 'dist/umd'),
-    libraryTarget: 'umd',
+    path: path.join(__dirname, 'dist/'),
   },
   plugins: [...rootWebpackConfig.plugins, new HtmlWebpackPlugin({ title: 'BukaBuka' })],
 };

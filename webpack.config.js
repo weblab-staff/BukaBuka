@@ -25,8 +25,25 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        test: /\.s?css$/,
+        oneOf: [
+          {
+            test: /\.module\.s?css$/,
+            use: [
+              {
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                    publicPath: __dirname + '/dist' // path to director where assets folder is located
+                }
+            },
+              "css-loader",
+              "sass-loader"
+            ]
+          },
+          {
+            use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/,
@@ -35,7 +52,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json', '.css'],
+    extensions: ['.ts', '.tsx', '.js', '.json','.scss','.css'],
   },
   plugins: [
     new MiniCssExtractPlugin({

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 import axios, { AxiosError } from 'axios';
+
 import './app.css';
+import './app.scss';
 
 interface HappinessResponse {
   happiness: number;
@@ -28,5 +30,11 @@ export const Main: React.FunctionComponent = () => {
   if (!loaded) {
     return <div>Bukabuka cannot be reached. There is no happiness.</div>;
   }
-  return <div>Bukabuka happiness level: {happiness}</div>;
+  return (
+    <div>
+      Bukabuka happiness level: {happiness}
+      <h1>SCSS works</h1>
+      <p>CSS works</p>
+    </div>
+  );
 };
