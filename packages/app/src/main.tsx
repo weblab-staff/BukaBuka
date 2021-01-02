@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useState, useEffect } from 'react';
 
 import axios, { AxiosError } from 'axios';
 
 import './app.css';
 import './app.scss';
+import buka from './public/buka.png';
 
 interface HappinessResponse {
   happiness: number;
@@ -32,6 +34,7 @@ export const Main: React.FunctionComponent = () => {
   }
   return (
     <div>
+      <img src={buka} />
       Bukabuka happiness level: {happiness}
       <h1>SCSS works</h1>
       <p>CSS works</p>

@@ -46,13 +46,15 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/,
-        loader: 'file-loader',
+        test: /\.(png|jpg|gif)$/i,
+        use: [{
+            loader: 'file-loader',
+        }]
       },
     ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json','.scss','.css'],
+    extensions: ['.ts', '.tsx', '.js', '.json','.scss','.css', '.png', '.jpg', '.gif'],
   },
   plugins: [
     new MiniCssExtractPlugin({

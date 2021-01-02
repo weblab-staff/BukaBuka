@@ -33,7 +33,8 @@
       ],
       "rules": {
         "@typescript-eslint/no-use-before-define": "off",
-        "@typescript-eslint/restrict-template-expressions": "off"
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/no-implict-any": "off"
       }
     }
   ]
