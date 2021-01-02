@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import axios, { AxiosError } from 'axios';
+import './app.css';
 
 interface HappinessResponse {
   happiness: number;
