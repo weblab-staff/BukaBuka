@@ -6,11 +6,12 @@ import bodyParser from 'body-parser';
 import ReactDOMServer from 'react-dom/server';
 import { App } from '@bukabuka/app';
 import ApiRouter from './routers/ApiRouter';
+import http from 'http';
 
 const appRootDirectory = path.dirname(require.resolve('@bukabuka/app/package.json'));
 const appBundleDirectory = path.join(appRootDirectory, 'dist/umd');
 
-export function createHttpServer(): express.Express {
+export function createHttpServer(): http.Server {
   const app = express();
   app.use(logger('dev'));
   app.use(compression());
@@ -22,7 +23,7 @@ export function createHttpServer(): express.Express {
   });
   app.get('/server', ssrHandler);
   app.use(express.static(appBundleDirectory));
-  return app;
+  return new http.Server(app);
 }
 
 function ssrHandler(_req: express.Request, res: express.Response) {

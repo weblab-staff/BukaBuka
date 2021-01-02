@@ -1,4 +1,5 @@
 import { createHttpServer } from './http-server';
+import { startSockets } from './socket';
 import dotenv from 'dotenv';
 
 dotenv.config({});
@@ -6,6 +7,7 @@ dotenv.config({});
 const PORT = process.env.PORT || 3000;
 
 const app = createHttpServer();
+startSockets(app);
 
 app.listen(PORT, () => {
   /* eslint-disable no-console */

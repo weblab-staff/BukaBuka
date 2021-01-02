@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {socket} from './socket';
 
 import axios, { AxiosError } from 'axios';
 interface HappinessResponse {
@@ -21,6 +22,10 @@ export const Main: React.FunctionComponent = () => {
     getHappiness().catch((err: AxiosError) => {
       throw new Error(`There is no happiness: ${err}`);
     });
+  }, []);
+
+  useEffect(() => {
+    socket.on("happinessLevel", setHappiness);
   }, []);
 
   if (!loaded) {

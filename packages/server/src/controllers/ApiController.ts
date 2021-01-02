@@ -2,6 +2,7 @@
 import type { docs_v1 } from 'googleapis';
 import google from '../google';
 import config from '../config';
+import {emitHappinessLevel} from '../socket';
 const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
 const START_TOKEN: string = config.startToken;
 
@@ -103,6 +104,8 @@ class ApiController {
   }
 
   getHappiness(): number {
+    // TODO: make sure this happens whenever the happines level is updated, and with the current level:
+    emitHappinessLevel(1);
     return 1;
   }
 
