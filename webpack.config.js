@@ -2,15 +2,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 /** @type import('webpack').Configuration */
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'eval',
   context: __dirname,
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        enforce: 'pre',
-        loader: 'source-map-loader',
-      },
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
