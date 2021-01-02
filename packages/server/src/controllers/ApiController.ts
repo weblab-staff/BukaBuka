@@ -20,6 +20,12 @@ class ApiController {
       .then((docId) => this.getDocument(docId))
       .then((doc) => this.parseDocument(doc))
       .then(() => this.validateParsing())
+      .then(() => {
+        this.questions.map((q, i) => {
+          console.log(q);
+          console.log(this.answers[i]);
+        })
+      })
       .catch((err) => {
         console.log(`ApiController(): Unable to parse google doc: ${err}`);
       });
