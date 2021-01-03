@@ -1,5 +1,8 @@
-import { Router } from 'express';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Request, Router } from 'express';
 import ApiController from '../controllers/ApiController';
+
 class ApiRouter {
   private _router = Router();
 
@@ -25,14 +28,43 @@ class ApiRouter {
       res.status(200).json({ happiness });
     });
 
-    this._router.get('/questions', (_, res) => {
-      const questions = ApiController.getQuestions();
-      res.status(200).json({ questions });
+    this.router.get('/question', (_, res) => {
+      const question = ApiController.getQuestion();
+      if (question === undefined) {
+        res.status(500).send({ err: 'Unable to find a question'});
+        return;
+      }
+      res.status(200).json({ question });
     });
 
-    this._router.get('/answers', (_, res) => {
+    this.router.get('/answers', (_, res) => {
       const answers = ApiController.getAnswers();
       res.status(200).json({ answers });
+    });
+
+    this.router.post('/wakeup', (_, res) => {
+      // TODO(johancc) - setup auth.
+      ApiController.wakeUpBukaBuka().then(() => {
+        res.status(200).end();
+      }).catch((err) => {
+        res.status(500).send(err);
+      });
+    });
+
+    this.router.post('/sleep', (_, res) => {
+      ApiController.stop();
+      res.status(200).end();
+    })
+
+    this.router.post('/happiness', (req: Request, res) => {
+      const desiredHappiness = req.body.happiness;
+      ApiController.modifyHappiness(desiredHappiness);
+      const happiness = ApiController.getHappiness();
+      if (desiredHappiness !== happiness) {
+        res.status(500).send({err: 'Failed to change happiness, somehow.'}).end();
+        return;
+      }
+      res.send({happiness}).end();
     });
   }
 }

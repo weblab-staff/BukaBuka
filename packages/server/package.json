@@ -4,7 +4,6 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha \"dist/test/**/*.spec.js\"",
-    "prestart": "yarn workspace @bukabuka/app bundle:prod",
     "start": "node --enable-source-maps ./dist/server-main.js"
   },
   "peerDependencies": {
@@ -12,7 +11,6 @@
     "react-dom": ">=17"
   },
   "dependencies": {
-    "@bukabuka/app": "^1.0.0",
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "googleapis": "^66.0.0",

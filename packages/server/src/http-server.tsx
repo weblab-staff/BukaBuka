@@ -6,8 +6,7 @@ import bodyParser from 'body-parser';
 import ApiRouter from './routers/ApiRouter';
 import http from 'http';
 
-const appRootDirectory = path.dirname(require.resolve('@bukabuka/app/package.json'));
-const appBundleDirectory = path.join(appRootDirectory, 'dist/');
+const appBundleDirectory = path.resolve(__dirname, '..', '..', 'app', 'dist');
 
 export function createHttpServer(): http.Server {
   const app = express();

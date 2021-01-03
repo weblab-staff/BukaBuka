@@ -3,20 +3,88 @@ import type { docs_v1 } from 'googleapis';
 import google from '../google';
 import config from '../config';
 import { emitHappinessLevel } from '../socket';
+import runEveryMinute, { stopJobs } from './cron'
+import Happiness  from './happiness';
+
 const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
 const START_TOKEN: string = config.startToken;
 
 class ApiController {
   private questions: Array<string> = [];
   private answers: Array<string> = [];
+  private happiness: Happiness;
 
   constructor() {
-    // Temp values while we resolve the api.
-    this.loadData();
+    this.happiness = new Happiness();
+  }
+
+  wakeUpBukaBuka(): Promise<void>{
+    this.setupDataRefresh();
+    return this.findHappinessFromStudents().then(() => {
+      console.log("ApiController(): buka buka has awakened.");
+    });
+  }
+
+  getHappiness(): number {
+    return this.happiness.getHappiness();
+  }
+
+  modifyHappiness(desiredHappiness: number): void  {
+    this.happiness?.forceHappiness(desiredHappiness);
+  }
+
+  getQuestions() {
+    return this.questions;
+  }
+
+  /**
+   * Finds the most recent question. If no question has been asked,
+   * it chooses among default phrases.
+   */
+  getQuestion() {
+    if (this.questions.length > 0) {
+      return this.questions[-1];
+    }
+    return config.bukabukaThoughts[0];
+  }
+
+  getAnswers() {
+    return this.answers;
+  }
+
+  alive(): Promise<boolean> {
+    const docs = google.docs({ version: 'v1' });
+    return docs.documents
+      .get({
+        // This ID is provided by Google, ideally it should not change.
+        documentId: '195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE',
+      })
+      .then(() => true)
+      .catch(() => false);
+  }
+
+  stop(): void {
+    stopJobs();
+  }
+
+  private setupDataRefresh() {
+    runEveryMinute(() => {
+      this.findHappinessFromStudents().then(() => {
+        emitHappinessLevel(this.happiness.getHappiness())
+      }).catch((err) => {
+        console.log(`ApiController(): Failed to find new happiness: ${err}`)
+      });
+    });
+  }
+  
+  private findHappinessFromStudents() {
+    return this.loadData()
+      .then(() => 
+        this.happiness.calculateHappiness(this.questions.length));
   }
 
   private loadData() {
-    this.getLatestDoc()
+    return this.getLatestDoc()
       .then((docId) => this.getDocument(docId))
       .then((doc) => this.parseDocument(doc))
       .then(() => this.validateParsing())
@@ -28,7 +96,8 @@ class ApiController {
   private getLatestDoc(): Promise<string> {
     return google
       .drive({ version: 'v2' })
-      .files.list({ spaces: 'drive', orderBy: 'createdDate', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
+      .files.list(
+        { spaces: 'drive', orderBy: 'createdDate', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
       .then((resp) => resp.data.items)
       .then((files) => {
         if (files === undefined || files === null || files.length === 0) {
@@ -101,35 +170,6 @@ class ApiController {
     if (this.questions.length < this.answers.length) {
       throw new Error('ApiController(): Somehow, buka buka has more answers than questions.');
     }
-  }
-
-  getHappiness(): number {
-    // TODO: make sure this happens whenever the happines level is updated, and with the current level:
-    emitHappinessLevel(1);
-    return 1;
-  }
-
-  modifyHappiness() {
-    throw new Error('ApiController(): not implemented');
-  }
-
-  getQuestions() {
-    return this.questions;
-  }
-
-  getAnswers() {
-    return this.answers;
-  }
-
-  alive(): Promise<boolean> {
-    const docs = google.docs({ version: 'v1' });
-    return docs.documents
-      .get({
-        // This ID is provided by Google, ideally it should not change.
-        documentId: '195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE',
-      })
-      .then(() => true)
-      .catch(() => false);
   }
 }
 
