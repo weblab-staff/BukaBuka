@@ -29,6 +29,35 @@ _Response_
 If buka buka has no questions, it will return whatever buka buka is thinking about.
 
 # Admin Routes
+## **Wake up buka buka**
+This will start the cron job that updates the happiness every minute.
+
+_Request_
+
+`POST /api/wakeup`
+
+Required Params:
+
+`pwd` - The admin password
+
+_Response_
+
+Empty
+
+## **Stop updating happiness**
+When class is over, stop the cron job so we don't waste resources.
+
+_Request_
+
+`POST /api/sleep`
+
+Required Params:
+
+`pwd` - The admin password
+
+_Response_
+
+Empty
 
 ## **Set happiness**
 
