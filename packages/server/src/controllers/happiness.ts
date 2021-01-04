@@ -25,7 +25,13 @@ class Happiness {
    * @param desiredHappiness
    */
   forceHappiness(desiredHappiness: number): void {
-    this.happiness = desiredHappiness;
+    if (desiredHappiness > 1) {
+      this.happiness = 1;
+    } else if (desiredHappiness < 0) {
+      this.happiness = 0;
+    } else {
+      this.happiness = desiredHappiness;
+    }
   }
   /**
    * This method assumes its called once per minute.

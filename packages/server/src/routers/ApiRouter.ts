@@ -116,6 +116,10 @@ class ApiRouter {
         res.status(403).send({ error: 'only weblab staff can tell buka buka how happy to be' }).end();
         return;
       }
+      if (req.body.happiness === undefined || req.body.happiness > 1 || req.body.happiness < 0) {
+        res.status(400).send({error: "provide a happiness value between 0 to 1."}).end();
+        return;
+      }
       const desiredHappiness = req.body.happiness;
       ApiController.modifyHappiness(desiredHappiness);
       const happiness = ApiController.getHappiness();

@@ -55,6 +55,26 @@ describe('Server', () => {
       expect(baseHappiness.body.happiness).to.be.equal(1);
     });
 
+    it('upper bounds happiness', async () => {
+      const prevHappiness = await testServer.get('/api/happiness');
+      expect(prevHappiness.status).to.be.equal(200);
+      const changeHappiness = await testServer.post('/api/happiness').send({ happiness: 1.1, pwd: 'codingmonkeys' });
+      expect(changeHappiness.status).to.be.equal(400);
+      const baseHappiness = await testServer.get('/api/happiness');
+      expect(baseHappiness.status).to.be.equal(200);
+      expect(baseHappiness.body.happiness).to.be.equal(prevHappiness.body.happiness);
+    });
+
+    it('lower bounds happiness', async () => {
+      const prevHappiness = await testServer.get('/api/happiness');
+      expect(prevHappiness.status).to.be.equal(200);
+      const changeHappiness = await testServer.post('/api/happiness').send({ happiness: -1, pwd: 'codingmonkeys' });
+      expect(changeHappiness.status).to.be.equal(400);
+      const baseHappiness = await testServer.get('/api/happiness');
+      expect(baseHappiness.status).to.be.equal(200);
+      expect(baseHappiness.body.happiness).to.be.equal(prevHappiness.body.happiness);
+    });
+
     it('blocks unauthorized happiness', async () => {
       const changeHappiness = await testServer.post('/api/happiness').send({ happiness: 1 });
       expect(changeHappiness.status).to.be.equal(403);
