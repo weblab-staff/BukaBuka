@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --dark-blue: #172761;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto Mono', monospace;
+  box-sizing: border-box;
+}
+
+.dark-blue-bg {
+  background-color: var(--dark-blue);
+  width: 100vw;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.white-text {
+  color: white;
+}
+
+.title {
+  position: absolute;
+  top: 10%;
+
+  font-size: 1.5em;
+  text-align: center;
+  width: 60%;
+  padding-bottom: 2em;
+}
+
+@for $i from 1 through 10 {
+  $height: percentage($i/10);
+  .buka-image-#{$i} {
+    height: $height;
+  }
+}
