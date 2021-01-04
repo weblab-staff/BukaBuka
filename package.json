@@ -1,15 +1,12 @@
 {
   "name": "bukabuka",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "clean": "rimraf ./packages/*/dist",
     "build": "cd packages/app && npm run bundle:prod && cd ../.. && cd packages/server && npm run build",
     "build:dev": "cd packages/app && npm run bundle:dev && cd ../.. && cd packages/server && npm run build",
     "build:server": "cd packages/server && npm run build",
     "lint": "eslint . -f codeframe",
-    "test:only": "mocha --exit \"packages/*/dist/test/**/*.spec.js\"",
+    "test": "mocha --exit \"packages/*/dist/test/**/*.spec.js\"",
     "start": "cd packages/server && npm start",
     "start:client": "cd packages/app && npm start",
     "prettify": "npx prettier . --write"
