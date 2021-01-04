@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useState, useEffect } from 'react';
-
 import axios, { AxiosError } from 'axios';
+import socket from './client-socket';
+
 import buka_0 from './images/buka_0.png';
 import buka_1 from './images/buka_1.png';
 import buka_2 from './images/buka_2.png';
@@ -35,6 +36,13 @@ export const Main: React.FunctionComponent = () => {
     setLoaded(true);
   };
 
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    socket.on('happiness', (value) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      setHappiness(value.happiness);
+    });
+  });
   useEffect(() => {
     getHappiness().catch((err: AxiosError) => {
       throw new Error(`There is no happiness: ${err}`);

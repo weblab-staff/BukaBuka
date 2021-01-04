@@ -61,9 +61,13 @@ class ApiController {
    */
   getQuestion() {
     if (this.questions.length > 0) {
-      return this.questions[-1];
+      return this.questions[0];
     }
     return config.bukabukaThoughts[0];
+  }
+
+  setQuestion(question: string) {
+    this.questions.unshift(question);
   }
 
   getAnswers() {

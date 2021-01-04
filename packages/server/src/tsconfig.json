@@ -1,8 +1,9 @@
 {
   "extends": "../../../tsconfig.base.json",
+  "module": "none",
   "compilerOptions": {
     "outDir": "../dist",
-    "types": ["node"]
+    "types": ["node"],
   },
   "references": [{ "path": "../../app/src" }]
 }
