@@ -2,14 +2,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 /** @type import('webpack').Configuration */
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   context: __dirname,
   module: {
     rules: [
       {
-        test: /\.js$/,
-        enforce: 'pre',
-        loader: 'source-map-loader',
+        test: /\.(js|jsx)$/,
+        loader: "babel-loader",
+        exclude: /node_modules/,
       },
       {
         test: /\.tsx?$/,
