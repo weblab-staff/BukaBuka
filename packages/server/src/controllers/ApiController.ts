@@ -57,6 +57,7 @@ class ApiController {
   }
 
   modifyHappiness(desiredHappiness: number): void {
+    emitHappinessLevel(desiredHappiness);
     this.happiness.forceHappiness(desiredHappiness);
   }
 
