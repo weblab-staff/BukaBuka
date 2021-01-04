@@ -11,6 +11,9 @@
     "start:client": "cd packages/app && npm start",
     "prettify": "npx prettier . --write"
   },
+  "engines": {
+    "node": ">=15"
+  },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
