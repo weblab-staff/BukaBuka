@@ -23,6 +23,11 @@ class ApiRouter {
         .catch(() => res.send({ alive: false }));
     });
 
+    this.router.get('/awake', (_, res) => {
+      const awake = ApiController.isAwake();
+      res.json({awake }).end();
+    });
+
     this.router.get('/happiness', (_, res) => {
       const happiness = ApiController.getHappiness();
       res.status(200).json({ happiness });

@@ -12,3 +12,11 @@ export function startSockets(server: http.Server): void {
 export function emitHappinessLevel(level: number): void {
   io.emit('happiness', level);
 }
+
+export function emitAwakeEvent(): void {
+  io.emit('awake', true);
+}
+
+export function emitSleepEvent(): void {
+  io.emit('sleep', true);
+}

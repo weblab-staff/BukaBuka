@@ -2,7 +2,7 @@
 import type { docs_v1 } from 'googleapis';
 import google from '../google';
 import config from '../config';
-import { emitHappinessLevel } from '../socket';
+import { emitHappinessLevel, emitAwakeEvent, emitSleepEvent } from '../socket';
 import runEveryMinute, { stopJobs } from './cron'
 import Happiness  from './happiness';
 import State from '../models/State';
@@ -14,6 +14,7 @@ class ApiController {
   private questions: Array<string> = [];
   private answers: Array<string> = [];
   private happiness: Happiness;
+  private awake = false;
 
   constructor() {
     this.happiness = new Happiness();
@@ -35,12 +36,17 @@ class ApiController {
   }
 
   wakeUpBukaBuka(): Promise<void> {
-   
+    this.awake = true;
+    emitAwakeEvent();
     return State.deleteMany({})
     .then(() => this.setupDataRefresh())
     .then(() => {
       console.log("ApiController(): buka buka has awakened.");
     });
+  }
+
+  isAwake(): boolean {
+    return this.awake;
   }
 
   getHappiness(): number {
@@ -87,6 +93,8 @@ class ApiController {
 
   stop(): Promise<void> {
     stopJobs();
+    this.awake = false;
+    emitSleepEvent();
     this.happiness = new Happiness(); // Return to base happiness.
     return State.deleteMany({}).then(() => {
       console.log("ApiController(): Successfully cleared state logs.")
@@ -104,7 +112,6 @@ class ApiController {
   }
   
   private findHappinessFromStudents() {
-    console.log("Finding happiness...");
     return this.loadData()
       .then(() => 
         this.happiness.calculateHappiness(this.questions.length))

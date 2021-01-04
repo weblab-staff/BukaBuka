@@ -37,6 +37,9 @@ describe('Server', () => {
     it('wakes up', async () => {
       const res = await testServer.post('/api/wakeup').send({pwd: "codingmonkeys"});
       expect(res.status).to.be.equal(200);
+      const awake = await testServer.get('/api/awake');
+      expect(awake.status).to.be.equal(200);
+      expect(awake.body.awake).to.be.equal(true);
     });
 
     it('only wakes up for weblab', async () => {

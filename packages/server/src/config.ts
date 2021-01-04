@@ -1,6 +1,6 @@
 export default {
   startToken: 'Ask a question!',
-  happinessFactor: 0.05, // 5% increase per minute per question 
+  happinessFactor: 0.02, // 5% increase per minute per question 
   defaultHappiness: 0.5, 
   bukabukaThoughts: ['Should I use `sudo` for good luck?'],
   password: 'codingmonkeys',

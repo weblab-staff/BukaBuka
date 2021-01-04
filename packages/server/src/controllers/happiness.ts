@@ -34,13 +34,11 @@ class Happiness {
   calculateHappiness(updatedQuestionCount: number): number {
     const engagement = updatedQuestionCount - this.questionCount;
     this.questionCount = updatedQuestionCount;
-    console.log(`Current happiness: ${this.happiness}, engagement: ${engagement}`)
     if (engagement === 0) {
       this.decreaseHappiness();
     } else {
       this.increaseHappiness(engagement);
     }
-    console.log(`Updated happiness: ${this.happiness}`)
     return this.happiness;
   }
 

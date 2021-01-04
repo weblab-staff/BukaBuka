@@ -11,5 +11,5 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js',
   },
-  plugins: [...rootWebpackConfig.plugins, new HtmlWebpackPlugin({ title: 'Buka Buka' })],
+  plugins: [...rootWebpackConfig.plugins, new HtmlWebpackPlugin({ title: 'buka buka', favicon: path.join(__dirname, 'src/images/favicon.ico') })],
 };
