@@ -5,6 +5,7 @@ import config from '../config';
 import { emitHappinessLevel } from '../socket';
 import runEveryMinute, { stopJobs } from './cron'
 import Happiness  from './happiness';
+import State from '../models/State';
 
 const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
 const START_TOKEN: string = config.startToken;
@@ -16,11 +17,28 @@ class ApiController {
 
   constructor() {
     this.happiness = new Happiness();
+
+    State.findOne({}).then((state) => {
+      if (state !== undefined && state !== null) {
+        this.happiness = new Happiness(state.happiness, state.questionCount);
+        return true;
+      }
+      return false;
+    }).then((previouslyAwake) => {
+      if (previouslyAwake) {
+        return this.wakeUpBukaBuka();
+      }
+      return Promise.resolve();
+    }).catch((err) => {
+     console.log(`ApiController(): Unable to find state logs: ${err}`);
+    });
   }
 
-  wakeUpBukaBuka(): Promise<void>{
-    this.setupDataRefresh();
-    return this.findHappinessFromStudents().then(() => {
+  wakeUpBukaBuka(): Promise<void> {
+   
+    return State.deleteMany({})
+    .then(() => this.setupDataRefresh())
+    .then(() => {
       console.log("ApiController(): buka buka has awakened.");
     });
   }
@@ -30,7 +48,7 @@ class ApiController {
   }
 
   modifyHappiness(desiredHappiness: number): void  {
-    this.happiness?.forceHappiness(desiredHappiness);
+    this.happiness.forceHappiness(desiredHappiness);
   }
 
   getQuestions() {
@@ -63,8 +81,12 @@ class ApiController {
       .catch(() => false);
   }
 
-  stop(): void {
+  stop(): Promise<void> {
     stopJobs();
+    this.happiness = new Happiness(); // Return to base happiness.
+    return State.deleteMany({}).then(() => {
+      console.log("ApiController(): Successfully cleared state logs.")
+    });
   }
 
   private setupDataRefresh() {
@@ -78,12 +100,32 @@ class ApiController {
   }
   
   private findHappinessFromStudents() {
+    console.log("Finding happiness...");
     return this.loadData()
       .then(() => 
-        this.happiness.calculateHappiness(this.questions.length));
+        this.happiness.calculateHappiness(this.questions.length))
+      .then(() => {
+        return State.findOne({}).then((state) => {
+          if (state == null || state == undefined) {
+            const baseState = new State(
+              {
+                questionCount: this.questions.length, 
+                happiness: this.happiness.getHappiness()
+              });
+            return baseState.save()
+          } else {
+            state.happiness = this.happiness.getHappiness();
+            state.questionCount = this.questions.length;
+            return state.save();
+          }
+        })
+      })
   }
 
   private loadData() {
+    // We reload all the data every minute.
+    this.questions = [];
+    this.answers = [];
     return this.getLatestDoc()
       .then((docId) => this.getDocument(docId))
       .then((doc) => this.parseDocument(doc))

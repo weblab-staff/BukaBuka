@@ -1,12 +1,20 @@
+/* eslint-disable no-console */
 import config from '../config';
 
-const EXPECTED_QUESTIONS_PER_MIN = config.expectedQuestionsPerMin;
 const HAPPINESS_FACTOR = config.happinessFactor;
 const DEFAULT_HAPPINESS = config.defaultHappiness;
-
+const MIN_HAPPINESS = 0.01;
 class Happiness {
-  private happiness = DEFAULT_HAPPINESS;
-  private questionCount = 0;
+  private happiness: number;
+  private questionCount: number;
+
+  constructor(happiness?: number, questionCount?: number) {
+    this.happiness = happiness || DEFAULT_HAPPINESS;
+    if (this.happiness < MIN_HAPPINESS) {
+      this.happiness = MIN_HAPPINESS;
+    }
+    this.questionCount = questionCount || 0;
+  }
 
   getHappiness(): number {
     return this.happiness;
@@ -26,21 +34,28 @@ class Happiness {
   calculateHappiness(updatedQuestionCount: number): number {
     const engagement = updatedQuestionCount - this.questionCount;
     this.questionCount = updatedQuestionCount;
-
-    if (engagement >= EXPECTED_QUESTIONS_PER_MIN) {
-      this.increaseHappiness();
-    } else {
+    console.log(`Current happiness: ${this.happiness}, engagement: ${engagement}`)
+    if (engagement === 0) {
       this.decreaseHappiness();
+    } else {
+      this.increaseHappiness(engagement);
     }
+    console.log(`Updated happiness: ${this.happiness}`)
     return this.happiness;
   }
 
-  private increaseHappiness() {
-    this.happiness =  this.happiness * HAPPINESS_FACTOR;
+  private increaseHappiness(engagement: number) {
+    this.happiness +=  engagement * HAPPINESS_FACTOR;
+    if (this.happiness > 1) {
+      this.happiness = 1;
+    }
   }
 
   private decreaseHappiness() {
-    this.happiness = this.happiness * (1-HAPPINESS_FACTOR);
+    this.happiness -= this.happiness * HAPPINESS_FACTOR;
+    if (this.happiness <= MIN_HAPPINESS) {
+      this.happiness = MIN_HAPPINESS; // Let's make sure buka buka has a will to live.
+    }
   }
 }
 

@@ -4,7 +4,8 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha \"dist/test/**/*.spec.js\"",
-    "start": "node --enable-source-maps ./dist/server-main.js"
+    "build": "cd src && tsc --build",
+    "start": "node ./dist/server-main.js"
   },
   "peerDependencies": {
     "react": ">=17",

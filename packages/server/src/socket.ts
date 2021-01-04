@@ -10,5 +10,7 @@ export function startSockets(server: http.Server): void {
 }
 
 export function emitHappinessLevel(level: number): void {
+  // eslint-disable-next-line no-console
+  console.log(`emitting happiness: ${level}`)
   io.emit('happinessLevel', level);
 }

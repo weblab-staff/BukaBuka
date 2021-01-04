@@ -1,8 +1,5 @@
 {
   "name": "bukabuka",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "clean": "rimraf ./packages/*/dist",
     "build": "cd packages/app && npm run bundle:prod && cd ../.. && cd packages/server && npm run build",
