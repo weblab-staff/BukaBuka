@@ -3,6 +3,6 @@
   "references": [
     { "path": "./packages/app/src" },
     { "path": "./packages/server/src" },
-    { "path": "./packages/server/test" },
+    { "path": "./packages/server/test" }
   ]
 }

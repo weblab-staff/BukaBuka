@@ -3,8 +3,8 @@ import type { docs_v1 } from 'googleapis';
 import google from '../google';
 import config from '../config';
 import { emitHappinessLevel, emitAwakeEvent, emitSleepEvent } from '../socket';
-import runEveryMinute, { stopJobs } from './cron'
-import Happiness  from './happiness';
+import runEveryMinute, { stopJobs } from './cron';
+import Happiness from './happiness';
 import State from '../models/State';
 
 const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
@@ -19,30 +19,33 @@ class ApiController {
   constructor() {
     this.happiness = new Happiness();
 
-    State.findOne({}).then((state) => {
-      if (state !== undefined && state !== null) {
-        this.happiness = new Happiness(state.happiness, state.questionCount);
-        return true;
-      }
-      return false;
-    }).then((previouslyAwake) => {
-      if (previouslyAwake) {
-        return this.wakeUpBukaBuka();
-      }
-      return Promise.resolve();
-    }).catch((err) => {
-     console.log(`ApiController(): Unable to find state logs: ${err}`);
-    });
+    State.findOne({})
+      .then((state) => {
+        if (state !== undefined && state !== null) {
+          this.happiness = new Happiness(state.happiness, state.questionCount);
+          return true;
+        }
+        return false;
+      })
+      .then((previouslyAwake) => {
+        if (previouslyAwake) {
+          return this.wakeUpBukaBuka();
+        }
+        return Promise.resolve();
+      })
+      .catch((err) => {
+        console.log(`ApiController(): Unable to find state logs: ${err}`);
+      });
   }
 
   wakeUpBukaBuka(): Promise<void> {
     this.awake = true;
     emitAwakeEvent();
     return State.deleteMany({})
-    .then(() => this.setupDataRefresh())
-    .then(() => {
-      console.log("ApiController(): buka buka has awakened.");
-    });
+      .then(() => this.setupDataRefresh())
+      .then(() => {
+        console.log('ApiController(): buka buka has awakened.');
+      });
   }
 
   isAwake(): boolean {
@@ -53,7 +56,7 @@ class ApiController {
     return this.happiness.getHappiness();
   }
 
-  modifyHappiness(desiredHappiness: number): void  {
+  modifyHappiness(desiredHappiness: number): void {
     this.happiness.forceHappiness(desiredHappiness);
   }
 
@@ -97,40 +100,40 @@ class ApiController {
     emitSleepEvent();
     this.happiness = new Happiness(); // Return to base happiness.
     return State.deleteMany({}).then(() => {
-      console.log("ApiController(): Successfully cleared state logs.")
+      console.log('ApiController(): Successfully cleared state logs.');
     });
   }
 
   private setupDataRefresh() {
     runEveryMinute(() => {
-      this.findHappinessFromStudents().then(() => {
-        emitHappinessLevel(this.happiness.getHappiness())
-      }).catch((err) => {
-        console.log(`ApiController(): Failed to find new happiness: ${err}`)
-      });
+      this.findHappinessFromStudents()
+        .then(() => {
+          emitHappinessLevel(this.happiness.getHappiness());
+        })
+        .catch((err) => {
+          console.log(`ApiController(): Failed to find new happiness: ${err}`);
+        });
     });
   }
-  
+
   private findHappinessFromStudents() {
     return this.loadData()
-      .then(() => 
-        this.happiness.calculateHappiness(this.questions.length))
+      .then(() => this.happiness.calculateHappiness(this.questions.length))
       .then(() => {
         return State.findOne({}).then((state) => {
           if (state == null || state == undefined) {
-            const baseState = new State(
-              {
-                questionCount: this.questions.length, 
-                happiness: this.happiness.getHappiness()
-              });
-            return baseState.save()
+            const baseState = new State({
+              questionCount: this.questions.length,
+              happiness: this.happiness.getHappiness(),
+            });
+            return baseState.save();
           } else {
             state.happiness = this.happiness.getHappiness();
             state.questionCount = this.questions.length;
             return state.save();
           }
-        })
-      })
+        });
+      });
   }
 
   private loadData() {
@@ -149,8 +152,7 @@ class ApiController {
   private getLatestDoc(): Promise<string> {
     return google
       .drive({ version: 'v2' })
-      .files.list(
-        { spaces: 'drive', orderBy: 'createdDate', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
+      .files.list({ spaces: 'drive', orderBy: 'createdDate', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
       .then((resp) => resp.data.items)
       .then((files) => {
         if (files === undefined || files === null || files.length === 0) {

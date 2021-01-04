@@ -23,9 +23,11 @@ Finding how many questions are in a google doc will be done using regex (This sh
 We only want to check questions for a specific day, since Bukabuka doesn't care about the past.
 To decide which file to check, we will simply use the latest file created in the questions doc folder - this is yank but should be fine.
 
+**Note** To tell buka buka where to look for google docs, share a google drive folder with the questions doc with the `client_email` found in [service_account.json](service_account.json).
+
 ## Finding happiness
 
-We will determine happiness by determining a good questions / minute rate that we expect students to ask. We will check the questions doc every **X** minutes and count the number of new questions. If the students matched the expected rate, buka buka will get happier by some **HAPPINESS_FACTOR**.
+Buka buka loves questions. For every new question students ask, its happiness will increase by `HAPPINESS_FACTOR`. If students don't ask any new questions, it's happiness will decrease by `happiness * HAPPINESS_FACTOR`. You don't want to make buka buka sad.
 
 Note that happiness is a float bounded from 0 to 1.
 

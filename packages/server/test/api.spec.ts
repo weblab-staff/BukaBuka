@@ -35,7 +35,7 @@ describe('Server', () => {
     });
 
     it('wakes up', async () => {
-      const res = await testServer.post('/api/wakeup').send({pwd: "codingmonkeys"});
+      const res = await testServer.post('/api/wakeup').send({ pwd: 'codingmonkeys' });
       expect(res.status).to.be.equal(200);
       const awake = await testServer.get('/api/awake');
       expect(awake.status).to.be.equal(200);
@@ -48,15 +48,15 @@ describe('Server', () => {
     });
 
     it('changes happiness', async () => {
-      const changeHappiness = await testServer.post('/api/happiness').send({happiness: 1, pwd: "codingmonkeys"});
+      const changeHappiness = await testServer.post('/api/happiness').send({ happiness: 1, pwd: 'codingmonkeys' });
       expect(changeHappiness.status).to.be.equal(200);
       const baseHappiness = await testServer.get('/api/happiness');
       expect(baseHappiness.status).to.be.equal(200);
       expect(baseHappiness.body.happiness).to.be.equal(1);
     });
-    
+
     it('blocks unauthorized happiness', async () => {
-      const changeHappiness = await testServer.post('/api/happiness').send({happiness: 1});
+      const changeHappiness = await testServer.post('/api/happiness').send({ happiness: 1 });
       expect(changeHappiness.status).to.be.equal(403);
       const baseHappiness = await testServer.get('/api/happiness');
       expect(baseHappiness.status).to.be.equal(200);
@@ -64,16 +64,17 @@ describe('Server', () => {
     });
 
     it('can change question', async () => {
-      const changeQuestion = await testServer.post('/api/question').send({question: 'Am I a code monkey?', pwd: "codingmonkeys"});
+      const changeQuestion = await testServer
+        .post('/api/question')
+        .send({ question: 'Am I a code monkey?', pwd: 'codingmonkeys' });
       expect(changeQuestion.status).to.be.equal(200);
       const getQuestion = await testServer.get('/api/question');
       expect(getQuestion.status).to.be.equal(200);
       expect(getQuestion.body.question).to.be.equal('Am I a code monkey?');
-
     });
 
     it('blocks unauthorized question', async () => {
-      const changeQuestion = await testServer.post('/api/question').send({question: 'Am I a code monkey?'});
+      const changeQuestion = await testServer.post('/api/question').send({ question: 'Am I a code monkey?' });
       expect(changeQuestion.status).to.be.equal(403);
     });
 
@@ -83,8 +84,8 @@ describe('Server', () => {
     });
 
     it('goes to sleep', async () => {
-      const req = await testServer.post('/api/sleep').send({pwd: 'codingmonkey'});
+      const req = await testServer.post('/api/sleep').send({ pwd: 'codingmonkey' });
       expect(req.status).to.be.equal(403);
-    })
+    });
   });
 });

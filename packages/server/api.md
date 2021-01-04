@@ -28,8 +28,51 @@ _Response_
 
 If buka buka has no questions, it will return whatever buka buka is thinking about.
 
+# Websocket events
+
+## ** "happiness" **
+
+_Event Name_
+
+`happiness`
+
+**Payload**
+`{happiness: number}
+
+**Frequency**
+
+This event will trigger whenever buka buka's happiness changes.
+
+## ** "sleep" **
+
+**Event Name**
+
+`sleep`
+
+**Payload**
+`{}`
+
+**Frequency**
+
+This event will trigger whenever buka buka sleeps.
+
+## ** "awake" **
+
+**Event Name**
+
+`awake`
+
+**Payload**
+`{}`
+
+**Frequency**
+
+This event will trigger whenever buka buka wakes up.
+
 # Admin Routes
+
 ## **Wake up buka buka**
+
 This will start the cron job that updates the happiness every minute.
 
 _Request_
@@ -45,6 +88,7 @@ _Response_
 Empty
 
 ## **Stop updating happiness**
+
 When class is over, stop the cron job so we don't waste resources.
 
 _Request_
@@ -110,13 +154,13 @@ _Response_
 
 `200` Status code if successfully found and parsed the questions doc. `500` otherwise.
 
-## **Rest**
+## **Sleep**
 
 Since lecture is over, this resets buka buka's happiness to 0.5 and stops checking the google doc.
 
 _Request_
 
-`POST /api/rest`
+`POST /api/sleep`
 
 Required Params:
 

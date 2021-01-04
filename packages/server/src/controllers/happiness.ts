@@ -22,7 +22,7 @@ class Happiness {
 
   /**
    * Overrides the current happiness.
-   * @param desiredHappiness 
+   * @param desiredHappiness
    */
   forceHappiness(desiredHappiness: number): void {
     this.happiness = desiredHappiness;
@@ -43,7 +43,7 @@ class Happiness {
   }
 
   private increaseHappiness(engagement: number) {
-    this.happiness +=  engagement * HAPPINESS_FACTOR;
+    this.happiness += engagement * HAPPINESS_FACTOR;
     if (this.happiness > 1) {
       this.happiness = 1;
     }
