@@ -117,7 +117,7 @@ class ApiRouter {
         return;
       }
       if (req.body.happiness === undefined || req.body.happiness > 1 || req.body.happiness < 0) {
-        res.status(400).send({error: "provide a happiness value between 0 to 1."}).end();
+        res.status(400).send({ error: 'provide a happiness value between 0 to 1.' }).end();
         return;
       }
       const desiredHappiness = req.body.happiness;

@@ -55,7 +55,7 @@ export const Main: React.FunctionComponent = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     socket.on('happiness', (value) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      setHappiness(value.happiness);
+      setHappiness(value);
     });
   });
 
