@@ -153,13 +153,13 @@ class ApiController {
   private getLatestDoc(): Promise<string> {
     return google
       .drive({ version: 'v2' })
-      .files.list({ spaces: 'drive', orderBy: 'createdDate', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
+      .files.list({ spaces: 'drive', orderBy: 'createdDate desc', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
       .then((resp) => resp.data.items)
       .then((files) => {
         if (files === undefined || files === null || files.length === 0) {
           throw new Error('ApiController(): buka buka could not find any files.');
         }
-        const doc = files[-1];
+        const doc = files[0];
         return doc?.id;
       })
       .then((id) => {
