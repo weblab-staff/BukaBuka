@@ -159,7 +159,7 @@ class ApiController {
         if (files === undefined || files === null || files.length === 0) {
           throw new Error('ApiController(): buka buka could not find any files.');
         }
-        const doc = files[0];
+        const doc = files[-1];
         return doc?.id;
       })
       .then((id) => {
