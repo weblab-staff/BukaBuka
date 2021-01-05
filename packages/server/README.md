@@ -20,10 +20,11 @@ Finding how many questions are in a google doc will be done using regex (This sh
 
 ## Keeping track of Google Docs.
 
-We only want to check questions for a specific day, since Bukabuka doesn't care about the past.
+We only want to check questions about today's lecture, since buka buka doesn't care about the past.
 To decide which file to check, we will simply use the latest file created in the questions doc folder - this is yank but should be fine.
 
-**Note** To tell buka buka where to look for google docs, share a google drive folder with the questions doc with the `client_email` found in [service_account.json](service_account.json).
+
+**Note** To tell buka buka where to look for google docs, share a google drive folder with the questions doc with the `client_email` found in [service_account.json](service_account.json). The server will the most recent editted documents within the last 5 hours. 
 
 ## Finding happiness
 

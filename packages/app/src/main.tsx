@@ -92,9 +92,9 @@ export const Main: React.FunctionComponent = () => {
 
   const text = loaded
     ? "this is buka buka the turtle. buka buka loves questions from web.lab students. no questions make buka buka sad. you don't want to make buka buka sad."
-    : 'buka buka cannot be reached. there is no happiness';
+    : 'buka buka cannot be reached. the weblab staff is saddened.';
 
-  const textWhenNotInClass = 'buka buka is resting until tomorrow';
+  const textWhenNotInClass = 'buka buka is resting';
   return (
     <div className="dark-blue-bg">
       <div className="container">

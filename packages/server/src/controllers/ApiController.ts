@@ -9,6 +9,8 @@ import State from '../models/State';
 
 const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
 const START_TOKEN: string = config.startToken;
+const LECTURE_LENGTH_HOURS = 5; // 5 hours
+const MAX_NUMBER_OF_DOCS = 2; // Up to 2 question docs are used
 
 class ApiController {
   private questions: Array<string> = [];
@@ -141,31 +143,54 @@ class ApiController {
     // We reload all the data every minute.
     this.questions = [];
     this.answers = [];
-    return this.getLatestDoc()
-      .then((docId) => this.getDocument(docId))
-      .then((doc) => this.parseDocument(doc))
+    return this.getLatestDocs()
+      .then((docIds) => {
+        return Promise.all(
+          docIds.map((id) => {
+            return this.getDocument(id);
+          })
+        );
+      })
+      .then((docs) => {
+        docs.forEach((doc) => this.parseDocument(doc));
+      })
       .then(() => this.validateParsing())
       .catch((err) => {
         console.log(`ApiController(): Unable to parse google doc: ${err}`);
       });
   }
 
-  private getLatestDoc(): Promise<string> {
+  private getLatestDocs(): Promise<string[]> {
+    const fileQuery = this.getGoogleDriveQuery();
     return google
       .drive({ version: 'v2' })
-      .files.list({ spaces: 'drive', orderBy: 'createdDate desc', q: `mimeType='${GOOGLE_DOC_MIMETYPE}'`, maxResults: 1 })
+      .files.list({ spaces: 'drive', q: fileQuery, orderBy: 'modifiedDate desc', maxResults: MAX_NUMBER_OF_DOCS })
       .then((resp) => resp.data.items)
       .then((files) => {
         if (files === undefined || files === null || files.length === 0) {
           throw new Error('ApiController(): buka buka could not find any files.');
         }
-        const doc = files[0];
-        return doc?.id;
+        const docIdsMaybeNull = files.filter((file) => file !== null && file !== undefined).map((file) => file?.id);
+        return docIdsMaybeNull;
       })
-      .then((id) => {
-        if (id === undefined || id === null) throw new Error('ApiController(): buka buka is confused');
-        return id;
+      .then((docIdsMaybeNull) => {
+        // For some reason Typescript's type inference doesn't allow
+        // me to use map + filter on this.
+        const ids: string[] = [];
+        docIdsMaybeNull.forEach((id) => {
+          if (id !== undefined && id !== null) {
+            ids.push(id);
+          }
+        });
+        return ids;
       });
+  }
+
+  private getGoogleDriveQuery(): string {
+    const yesterday = new Date(new Date().setHours(new Date().getHours() - LECTURE_LENGTH_HOURS));
+    const isoStringUpToSeconds = yesterday.toISOString();
+    const fileQuery = `modifiedDate > '${isoStringUpToSeconds}' and mimeType contains '${GOOGLE_DOC_MIMETYPE}'`;
+    return fileQuery;
   }
 
   private getDocument(documentId: string) {
