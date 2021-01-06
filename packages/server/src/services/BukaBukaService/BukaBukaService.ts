@@ -30,10 +30,10 @@ class BukaBukaService {
    * As a side effect, it will start fetching new questions and answers every minute
    * until `ApiService.stop()` is called.
    */
-  wakeUpBukaBuka(): Promise<void> {
+  start() {
     return State.deleteMany({})
       .then(() => this.findHappinessFromStudents())
-      .then(() => this.setupDataRefresh())
+      .then(() => this.setupStateRefresh())
       .then(() => {
         const msg = `buka buka has woken up at ${new Date().toTimeString()}`;
         // eslint-disable-next-line no-console
@@ -46,15 +46,15 @@ class BukaBukaService {
       });
   }
 
-  isAwake(): boolean {
+  isAwake() {
     return this.awake;
   }
 
-  getHappiness(): number {
+  getHappiness() {
     return this.happiness.getHappiness();
   }
 
-  modifyHappiness(desiredHappiness: number): void {
+  modifyHappiness(desiredHappiness: number) {
     emitHappinessLevel(desiredHappiness);
     this.happiness.forceHappiness(desiredHappiness);
   }
@@ -81,7 +81,7 @@ class BukaBukaService {
     return this.answers;
   }
 
-  getAllQuestionsAndAnswers(): Array<{ question: string; answer: string }> {
+  getAllQuestionsAndAnswers() {
     if (!this.isAwake) {
       const errMsg = 'BukaBukaService::getQuestionsAndAnswers(): buka buka must be awake.';
       throw new Error(errMsg);
@@ -109,7 +109,7 @@ class BukaBukaService {
     this.questions.unshift(question);
   }
 
-  stop(): Promise<void> {
+  stop() {
     stopJobs();
     return State.deleteMany({})
       .then(() => {
@@ -124,7 +124,7 @@ class BukaBukaService {
       });
   }
 
-  private setupDataRefresh() {
+  private setupStateRefresh() {
     runEveryMinute(() => {
       this.findHappinessFromStudents()
         .then(() => {
@@ -134,17 +134,6 @@ class BukaBukaService {
           throw new Error(`BukaBukaService(): Failed to find new happiness: ${err}`);
         });
     });
-  }
-
-  private findHappinessFromStudents() {
-    return this.getQuestionsAndAnswers()
-      .then(({ questions, answers }) => {
-        this.questions = questions;
-        this.answers = answers;
-        return { questions, answers };
-      })
-      .then(() => this.happiness.calculateHappiness(this.questions.length))
-      .then(() => this.saveState());
   }
 
   private restoreStateIfPreviouslyAwoken() {
@@ -158,7 +147,7 @@ class BukaBukaService {
       })
       .then((previouslyAwake) => {
         if (previouslyAwake) {
-          return this.wakeUpBukaBuka();
+          return this.start();
         }
         return Promise.resolve();
       })
@@ -181,6 +170,17 @@ class BukaBukaService {
         return state.save();
       }
     });
+  }
+
+  private findHappinessFromStudents() {
+    return this.getQuestionsAndAnswers()
+      .then(({ questions, answers }) => {
+        this.questions = questions;
+        this.answers = answers;
+        return { questions, answers };
+      })
+      .then(() => this.happiness.calculateHappiness(this.questions.length))
+      .then(() => this.saveState());
   }
 
   private getQuestionsAndAnswers() {

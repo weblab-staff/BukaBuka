@@ -23,7 +23,7 @@ class ApiRouter {
 
   private configureAdminRoutes() {
     this.router.post('/wakeup', auth, (_, res) => {
-      BukaBukaService.wakeUpBukaBuka()
+      BukaBukaService.start()
         .then(() => {
           res.status(200).send({ msg: 'buka buka is awake.' });
         })

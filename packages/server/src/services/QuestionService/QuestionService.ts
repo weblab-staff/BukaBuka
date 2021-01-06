@@ -5,16 +5,16 @@ import config from '../../config';
 export default class QuestionService {
   private googleDocsApi = google.docs({ version: 'v1' });
   private googleDriveApi = google.drive({ version: 'v2' });
-
+  private maxNumOfDocuments = 2;
   /**
    * Finds the questions asked by students today across all question documents used
    * within the last 24 hours.
    */
   getQuestionsAndAnswers(): Promise<{ questions: Array<string>; answers: Array<string> }> {
-    return this.getQuestionDocsFromToday();
+    return this.getQuestionsAndAnswersFromToday();
   }
 
-  private getQuestionDocsFromToday(): Promise<{ questions: Array<string>; answers: Array<string> }> {
+  private getQuestionsAndAnswersFromToday(): Promise<{ questions: Array<string>; answers: Array<string> }> {
     return this.getDocsIdsFromGoogleDrive()
       .then((ids) => {
         return Promise.all(ids.map((id) => this.getDocument(id)));
@@ -24,8 +24,8 @@ export default class QuestionService {
         const allAnswers: Array<string> = [];
         docs.forEach((doc) => {
           const { questions, answers } = this.getQuestionsAndAnswersFromDoc(doc);
-          allQuestions.concat(questions);
-          allAnswers.concat(answers);
+          allQuestions.push(...questions);
+          allAnswers.push(...answers);
         });
         return { questions: allQuestions, answers: allAnswers };
       });
@@ -34,7 +34,7 @@ export default class QuestionService {
   private getDocsIdsFromGoogleDrive() {
     const query = this.buildGoogleDriveQuery();
     return this.googleDriveApi.files
-      .list({ spaces: 'drive', q: query, orderBy: 'modifiedDate desc' })
+      .list({ spaces: 'drive', q: query, orderBy: 'modifiedDate desc', maxResults: this.maxNumOfDocuments })
       .then((resp) => resp.data.items)
       .then((files) => {
         if (files === undefined || files === null || files.length === 0) {
@@ -44,8 +44,8 @@ export default class QuestionService {
         return docIdsMaybeNull;
       })
       .then((docIdsMaybeNull) => {
-        // For some reason Typescript's type inference doesn't allow
-        // me to use map + filter on this.
+        // Not using .filter() because the type of the elements after filter is still
+        // { string | undefined | null }.
         const ids: string[] = [];
         docIdsMaybeNull.forEach((id) => {
           if (id !== undefined && id !== null) {
@@ -60,6 +60,7 @@ export default class QuestionService {
     const GOOGLE_DOC_MIMETYPE = 'application/vnd.google-apps.document';
     const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
     const isoStringUpToSeconds = yesterday.toISOString();
+    // Query language found here: https://developers.google.com/drive/api/v2/search-files
     const fileQuery = `modifiedDate > '${isoStringUpToSeconds}' and mimeType contains '${GOOGLE_DOC_MIMETYPE}'`;
     return fileQuery;
   }
@@ -121,6 +122,7 @@ export default class QuestionService {
     });
     return elements;
   }
+
   private isQuestion(element: docs_v1.Schema$ParagraphElement): boolean {
     // We assume questions questions are bolded.
     const isBold = element.textRun?.textStyle?.bold;
