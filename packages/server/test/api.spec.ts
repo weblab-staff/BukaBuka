@@ -9,12 +9,6 @@ const testServer = request(createHttpServer());
 
 describe('Server', () => {
   describe('/api', () => {
-    it('is alive', async () => {
-      const res = await testServer.get('/api/alive');
-      expect(res.status).to.equal(200);
-      expect(res.body.alive).to.be.true;
-    });
-
     it('provides happiness', async () => {
       const res = await testServer.get('/api/happiness');
       expect(res.status).to.equal(200);

@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import config from '../config';
+import config from '../../config';
 
 const HAPPINESS_FACTOR = config.happinessFactor;
 const DEFAULT_HAPPINESS = config.defaultHappiness;

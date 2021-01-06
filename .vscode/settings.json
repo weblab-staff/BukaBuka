@@ -2,5 +2,7 @@
   "folders": [],
   "settings": {},
   "editor.formatOnSave": true,
-  "prettier.packageManager": "yarn"
+  "prettier.packageManager": "npm",
+  "files.autoSave": "onFocusChange",
+  "prettier.jsxBracketSameLine": true
 }

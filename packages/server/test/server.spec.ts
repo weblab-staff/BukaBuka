@@ -14,4 +14,10 @@ describe('Server', () => {
       expect(res.status).to.equal(200);
     });
   });
+  describe('/api/awake', () => {
+    it('should be connected with the API', async () => {
+      const res = await testServer.get('/api/awake');
+      expect(res.status).to.equal(200);
+    });
+  });
 });
