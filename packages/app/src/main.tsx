@@ -25,6 +25,10 @@ interface HappinessResponse {
   happiness: number;
 }
 
+interface QuestionResponse {
+  question: string;
+}
+
 interface AwakeResponse {
   awake: boolean;
 }
@@ -32,6 +36,7 @@ interface AwakeResponse {
 export const Main: React.FunctionComponent = () => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [happiness, setHappiness] = useState<number>(0.5);
+  const [question, setQuestion] = useState<string>('can i use --force in my git commands for good luck?');
   const [active, setActive] = useState<boolean>(false);
 
   const getHappiness = async () => {
@@ -40,7 +45,14 @@ export const Main: React.FunctionComponent = () => {
       .then((res) => res.data)
       .then((happinessResp) => happinessResp.happiness);
     setHappiness(happinessValue);
-    setLoaded(true);
+  };
+
+  const getQuestion = async () => {
+    const questionValue = await axios
+      .get<QuestionResponse>('/api/question')
+      .then((res) => res.data)
+      .then((questionResp) => questionResp.question);
+    setQuestion(questionValue);
   };
 
   const checkIfClassActive = async () => {
@@ -52,38 +64,33 @@ export const Main: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    socket.on('happiness', (value) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    socket.on('happiness', (value: number) => {
       setHappiness(value);
     });
-  });
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     socket.on('awake', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       setActive(true);
     });
-  });
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     socket.on('sleep', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       setActive(false);
     });
-  });
+  }, []);
 
   useEffect(() => {
     checkIfClassActive().catch((err: AxiosError) => {
       throw new Error(`Buka buka is not in class: ${err}`);
     });
-  });
+  }, []);
 
   useEffect(() => {
-    getHappiness().catch((err: AxiosError) => {
-      throw new Error(`There is no happiness: ${err}`);
+    Promise.all([
+      getHappiness().catch((err: AxiosError) => {
+        throw new Error(`There is no happiness: ${err}`);
+      }),
+      getQuestion().catch((err: AxiosError) => {
+        throw new Error(`There is no question: ${err}`);
+      }),
+    ]).then(() => {
+      setLoaded(true);
     });
   }, []);
 
@@ -91,7 +98,9 @@ export const Main: React.FunctionComponent = () => {
   const buka_size = Math.trunc(happiness * 10) + 1;
 
   const text = loaded
-    ? "this is buka buka the turtle. buka buka loves questions from web.lab students. no questions make buka buka sad. you don't want to make buka buka sad."
+    ? question
+      ? question
+      : "this is buka buka the turtle. buka buka loves questions from web.lab students. no questions make buka buka sad. you don't want to make buka buka sad."
     : 'buka buka cannot be reached. the weblab staff is saddened.';
 
   const textWhenNotInClass = 'buka buka is resting';
@@ -100,7 +109,9 @@ export const Main: React.FunctionComponent = () => {
       <div className="container">
         <div className="title white-text">{active ? text : textWhenNotInClass} </div>
         {active ? (
-          <img className={`buka-image-${buka_size}`} src={images[buka_number] || buka_2} />
+          <div>
+            <img className={`buka-image-${buka_size}`} src={images[buka_number] || buka_2} />
+          </div>
         ) : (
           <img className={`buka-image-5`} src={sleepingBuka} />
         )}
