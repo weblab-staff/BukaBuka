@@ -82,16 +82,13 @@ export const Main: React.FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    Promise.all([
-      getHappiness().catch((err: AxiosError) => {
-        throw new Error(`There is no happiness: ${err}`);
-      }),
-      getQuestion().catch((err: AxiosError) => {
-        throw new Error(`There is no question: ${err}`);
-      }),
-    ]).then(() => {
-      setLoaded(true);
-    });
+    Promise.all([getHappiness(), getQuestion()])
+      .then(() => {
+        setLoaded(true);
+      })
+      .catch((err) => {
+        throw new Error(`Failed to contact the buka buka service: ${err}`);
+      });
   }, []);
 
   const buka_number = Math.min(Math.trunc(happiness / 0.2), 4);
