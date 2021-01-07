@@ -4,7 +4,6 @@ import QuestionService from '../QuestionService';
 import runEveryMinute, { stopJobs } from './cron';
 import Happiness from './happiness';
 import State from '../../models/State';
-
 /**
  * Buka buka loves questions from weblab students. no questions make buka buka sad.
  *
@@ -120,6 +119,7 @@ class BukaBukaService {
         console.log(`BukaBukaService::stop(): buka buka has gone to sleep at ${new Date().toTimeString()}`);
         this.awake = false;
         this.happiness = new Happiness(); // Return to base happiness.
+        this.questions = [];
         emitSleepEvent();
       })
       .catch((err) => {
@@ -143,6 +143,9 @@ class BukaBukaService {
       .then((state) => {
         if (state !== undefined && state !== null) {
           this.happiness = new Happiness(state.happiness, state.questionCount);
+          if (state.question) {
+            this.questions.unshift(state.question);
+          }
           return true;
         }
         return false;
@@ -165,10 +168,16 @@ class BukaBukaService {
           questionCount: this.questions.length,
           happiness: this.happiness.getHappiness(),
         });
+        if (this.questions[0]) {
+          baseState.question = this.questions[0];
+        }
         return baseState.save();
       } else {
         state.happiness = this.happiness.getHappiness();
         state.questionCount = this.questions.length;
+        if (this.questions[0]) {
+          state.question = this.questions[0];
+        }
         return state.save();
       }
     });
@@ -194,8 +203,7 @@ class BukaBukaService {
         this.answers = answers;
         return { questions, answers };
       })
-      .then(() => this.happiness.calculateHappiness(this.questions.length))
-      .then(() => this.saveState());
+      .then(() => this.happiness.calculateHappiness(this.questions.length));
   }
 
   private getQuestionsAndAnswers() {

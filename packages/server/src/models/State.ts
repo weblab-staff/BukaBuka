@@ -6,6 +6,7 @@ const StateSchema: Schema = new Schema({
 });
 
 export interface State extends Document {
+  question: string;
   questionCount: number;
   happiness: number;
 }

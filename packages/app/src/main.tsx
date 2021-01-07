@@ -64,8 +64,13 @@ export const Main: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    socket.on('happiness', (value: number) => {
-      setHappiness(value);
+
+    socket.on('question', (question: string) => {
+      setQuestion(question);
+    });
+
+    socket.on('happiness', (happiness: number) => {
+      setHappiness(happiness);
     });
     socket.on('awake', () => {
       setActive(true);
