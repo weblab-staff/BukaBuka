@@ -1,5 +1,5 @@
 import config from '../../config';
-import { emitHappinessLevel, emitAwakeEvent, emitSleepEvent } from '../../socket';
+import { emitHappinessLevel, emitAwakeEvent, emitSleepEvent, emitQuestionEvent } from '../../socket';
 import QuestionService from '../QuestionService';
 import runEveryMinute, { stopJobs } from './cron';
 import Happiness from './happiness';
@@ -32,7 +32,9 @@ class BukaBukaService {
    */
   start() {
     return State.deleteMany({})
-      .then(() => this.findHappinessFromStudents())
+      .then(() => this.findHappinessAndQuestionsFromStudents())
+      .then(() => this.saveState())
+      .then(() => this.emitState())
       .then(() => this.setupStateRefresh())
       .then(() => {
         const msg = `buka buka has woken up at ${new Date().toTimeString()}`;
@@ -106,6 +108,7 @@ class BukaBukaService {
   }
 
   setQuestion(question: string) {
+    emitQuestionEvent(question);
     this.questions.unshift(question);
   }
 
@@ -126,10 +129,9 @@ class BukaBukaService {
 
   private setupStateRefresh() {
     runEveryMinute(() => {
-      this.findHappinessFromStudents()
-        .then(() => {
-          emitHappinessLevel(this.happiness.getHappiness());
-        })
+      this.findHappinessAndQuestionsFromStudents()
+        .then(() => this.saveState())
+        .then(() => this.emitState())
         .catch((err) => {
           throw new Error(`BukaBukaService(): Failed to find new happiness: ${err}`);
         });
@@ -172,7 +174,20 @@ class BukaBukaService {
     });
   }
 
-  private findHappinessFromStudents() {
+  private emitState() {
+    this.emitQuestion();
+    emitHappinessLevel(this.happiness.getHappiness());
+  }
+
+  private emitQuestion() {
+    if (this.questions.length > 0 && this.questions[0] !== undefined) {
+      emitQuestionEvent(this.questions[0]);
+    } else if (config.bukabukaThoughts[0] !== undefined) {
+      emitQuestionEvent(config.bukabukaThoughts[0]);
+    }
+  }
+
+  private findHappinessAndQuestionsFromStudents() {
     return this.getQuestionsAndAnswers()
       .then(({ questions, answers }) => {
         this.questions = questions;
