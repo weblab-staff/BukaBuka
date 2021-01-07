@@ -3,20 +3,24 @@ import { Server } from 'socket.io';
 
 let io: Server;
 
-export function startSockets(server: http.Server): void {
+export const startSockets = (server: http.Server): void => {
   io = new Server(server);
   // eslint-disable-next-line no-console
   console.log('Listening for socket connections');
-}
+};
 
-export function emitHappinessLevel(level: number): void {
+export const emitHappinessLevel = (level: number): void => {
   io.emit('happiness', level);
-}
+};
 
-export function emitAwakeEvent(): void {
+export const emitAwakeEvent = (): void => {
   io.emit('awake', true);
-}
+};
 
-export function emitSleepEvent(): void {
+export const emitSleepEvent = (): void => {
   io.emit('sleep', true);
-}
+};
+
+export const emitQuestionEvent = (question: string): void => {
+  io.emit('question', question);
+};
