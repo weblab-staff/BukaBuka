@@ -35,7 +35,7 @@ describe('Server', () => {
       const awake = await testServer.get('/api/awake');
       expect(awake.status).to.be.equal(200);
       expect(awake.body.awake).to.be.equal(true);
-    });
+    }).timeout(5000);
 
     it('only wakes up for weblab', async () => {
       const res = await testServer.post('/api/wakeup');
@@ -99,6 +99,6 @@ describe('Server', () => {
     it('goes to sleep', async () => {
       const req = await testServer.post('/api/sleep').send({ pwd });
       expect(req.status).to.be.equal(200);
-    });
+    }).timeout(5000);
   });
 });

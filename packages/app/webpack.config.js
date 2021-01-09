@@ -13,6 +13,6 @@ module.exports = {
   },
   plugins: [
     ...rootWebpackConfig.plugins,
-    new HtmlWebpackPlugin({ title: 'buka buka', favicon: path.join(__dirname, 'src/images/favicon.ico') }),
+    new HtmlWebpackPlugin({ title: 'buka buka', favicon: path.join(__dirname, 'src/images/favicon.ico'), meta: { description: 'buka buka loves questions from weblab students.'}}),
   ],
 };

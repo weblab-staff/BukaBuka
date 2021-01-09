@@ -5,7 +5,6 @@ import config from '../../config';
 export default class QuestionService {
   private googleDocsApi = google.docs({ version: 'v1' });
   private googleDriveApi = google.drive({ version: 'v2' });
-  private maxNumOfDocuments = 2;
   /**
    * Finds the questions asked by students today across all question documents used
    * within the last 24 hours.
@@ -34,7 +33,7 @@ export default class QuestionService {
   private getDocsIdsFromGoogleDrive() {
     const query = this.buildGoogleDriveQuery();
     return this.googleDriveApi.files
-      .list({ spaces: 'drive', q: query, orderBy: 'modifiedDate desc', maxResults: this.maxNumOfDocuments })
+      .list({ spaces: 'drive', q: query, orderBy: 'modifiedDate desc' })
       .then((resp) => resp.data.items)
       .then((files) => {
         if (files === undefined || files === null || files.length === 0) {
@@ -70,28 +69,42 @@ export default class QuestionService {
   }
 
   private getQuestionsAndAnswersFromDoc(doc: docs_v1.Schema$Document) {
+    const paragraphElements = this.getParagraphElements(doc);
+    const { questions, answers } = this.parseParagraphs(paragraphElements);
+    this.validateParsing(questions, answers, doc);
+    return { questions, answers };
+  }
+
+  private getParagraphElements(doc: docs_v1.Schema$Document): Array<docs_v1.Schema$ParagraphElement> {
+    const elements: Array<docs_v1.Schema$ParagraphElement> = [];
+    doc.body?.content?.map((section) => {
+      section.paragraph?.elements?.map((p) => {
+        elements.push(p);
+      });
+    });
+    return elements;
+  }
+
+  private parseParagraphs(paragraphs: Array<docs_v1.Schema$ParagraphElement>) {
     // Parsing works by alternating between three states:
     // Not parsing, parsing question, parsing answer.
-
     // We use START_TOKEN to know when the questions start.
     const START_TOKEN = config.startToken;
     let startParsing = false;
     let isParsingQuestion = false;
     const questions: Array<string> = [];
     const answers: Array<string> = [];
-    const paragraphElements = this.getParagraphElements(doc);
-    paragraphElements.forEach((element) => {
-      const rawText = element.textRun?.content?.toString();
-      if (rawText === undefined) {
+    paragraphs.forEach((element) => {
+      const content = element.textRun?.content;
+      if (content === undefined || content == null) {
         return;
       }
-      const text = rawText.trim();
-      if (text === '') return;
+      const text = content.toString().trim();
       if (text === START_TOKEN) {
         startParsing = true;
         return; // We don't want to parse the START_TOKEN.
       }
-      if (!startParsing) {
+      if (!startParsing || text === '') {
         return;
       }
 
@@ -106,21 +119,11 @@ export default class QuestionService {
         isParsingQuestion = false;
         answers.push(text);
       } else {
+        // Extra space to separate paragraphs.
         answers[-1] += ` ${text}`;
       }
     });
-    this.validateParsing(questions, answers, doc);
     return { questions, answers };
-  }
-
-  private getParagraphElements(doc: docs_v1.Schema$Document): Array<docs_v1.Schema$ParagraphElement> {
-    const elements: Array<docs_v1.Schema$ParagraphElement> = [];
-    doc.body?.content?.map((element) => {
-      element.paragraph?.elements?.map((p) => {
-        elements.push(p);
-      });
-    });
-    return elements;
   }
 
   private isQuestion(element: docs_v1.Schema$ParagraphElement): boolean {

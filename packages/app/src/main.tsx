@@ -111,9 +111,9 @@ export const Main: React.FunctionComponent = () => {
       <div className="container">
         <div className="title white-text">{active ? text : textWhenNotInClass} </div>
         {active ? (
-          <img className={`buka-image-${buka_size}`} src={images[buka_number] || buka_2} />
+          <img className={`buka-image-${buka_size}`} src={images[buka_number] || buka_2}  alt="buka buka"/>
         ) : (
-          <img className={`buka-image-5`} src={sleepingBuka} />
+          <img className={`buka-image-5`} src={sleepingBuka} alt="sleeping buka buka"/>
         )}
       </div>
     </div>

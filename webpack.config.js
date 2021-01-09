@@ -2,7 +2,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 /** @type import('webpack').Configuration */
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   context: __dirname,
   module: {
     rules: [
