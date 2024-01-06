@@ -6,13 +6,13 @@
     "build:dev": "cd packages/app && npm run bundle:dev && cd ../.. && cd packages/server && npm run build",
     "build:server": "cd packages/server && npm run build",
     "lint": "eslint . -f codeframe",
-    "test": "nyc mocha --exit \"packages/*/dist/test/**/*.spec.js\"",
+    "test": "nyc mocha --exit",
     "start": "cd packages/server && npm start",
     "start:client": "cd packages/app && npm start",
     "prettify": "npx prettier . --write"
   },
   "engines": {
-    "node": ">=15"
+    "node": ">=16"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
@@ -46,9 +46,8 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
     "lerna": "^6.3.0",
-    "mini-css-extract-plugin": "^1.3.3",
+    "mini-css-extract-plugin": "^2.7.5",
     "mocha": "^10.2.0",
-    "node-sass": "^8.0.0",
     "nyc": "^15.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -77,10 +76,14 @@
     "express": "^4.17.1",
     "express-validator": "^6.9.2",
     "googleapis": "^113.0.0",
-    "mongoose": "^5.11.10",
+    "mongoose": "^7.0.2",
     "morgan": "^1.10.0",
     "node-schedule": "^1.3.2",
+    "sass": "^1.69.7",
     "socket.io": "^4.5.4",
     "socket.io-client": "^3.0.5"
+  },
+  "mocha": {
+      "spec": "packages/*/dist/test/**/*.spec.js" 
   }
 }
