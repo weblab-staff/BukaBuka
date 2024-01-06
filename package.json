@@ -6,7 +6,7 @@
     "build:dev": "cd packages/app && npm run bundle:dev && cd ../.. && cd packages/server && npm run build",
     "build:server": "cd packages/server && npm run build",
     "lint": "eslint . -f codeframe",
-    "test": "nyc mocha --exit \"packages/*/dist/test/**/*.spec.js\"",
+    "test": "nyc mocha --exit",
     "start": "cd packages/server && npm start",
     "start:client": "cd packages/app && npm start",
     "prettify": "npx prettier . --write"
@@ -82,5 +82,8 @@
     "sass": "^1.69.7",
     "socket.io": "^4.5.4",
     "socket.io-client": "^3.0.5"
+  },
+  "mocha": {
+      "spec": "packages/*/dist/test/**/*.spec.js" 
   }
 }
