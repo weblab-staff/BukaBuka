@@ -1,6 +1,7 @@
 import config from '../../config';
 
 const HAPPINESS_FACTOR = config.happinessFactor;
+const HAPPINESS_DECAY = config.happinessDecay;
 const DEFAULT_HAPPINESS = config.defaultHappiness;
 const MIN_HAPPINESS = 0.01;
 class Happiness {
@@ -55,7 +56,7 @@ class Happiness {
   }
 
   private decreaseHappiness() {
-    this.happiness -= this.happiness * HAPPINESS_FACTOR;
+    this.happiness -= this.happiness * HAPPINESS_DECAY; 
     if (this.happiness <= MIN_HAPPINESS) {
       this.happiness = MIN_HAPPINESS; // Let's make sure buka buka has a will to live.
     }
