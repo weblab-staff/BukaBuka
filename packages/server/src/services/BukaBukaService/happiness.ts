@@ -1,7 +1,7 @@
 import config from '../../config';
 
 const HAPPINESS_FACTOR = config.happinessFactor;
-const HAPPINESS_DECAY = config.happinessDecay;
+const HAPPINESS_DECAY = config.happinessDecayFactor;
 const DEFAULT_HAPPINESS = config.defaultHappiness;
 const MIN_HAPPINESS = 0.01;
 class Happiness {
