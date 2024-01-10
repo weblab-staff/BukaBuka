@@ -34,7 +34,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.18.0",
-    "@typescript-eslint/parser": "^6.18.0",
+    "@typescript-eslint/parser": "^6.18.1",
     "babel-loader": "^8.2.2",
     "chai": "^4.2.0",
     "css-loader": "^6.8.1",
